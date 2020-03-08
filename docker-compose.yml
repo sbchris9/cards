@@ -11,6 +11,7 @@ services:
       POSTGRES_DB: prod
     volumes:
       - data:/var/lib/postgresql/data
+    restart: always
 
   api:
     build: ./
@@ -29,6 +30,7 @@ services:
       REFRESH_TOKEN_SECRET: '${REFRESH_TOKEN_SECRET}'
     depends_on:
       - db
+    restart: always
 
   web:
     build:
@@ -38,6 +40,7 @@ services:
       - frontend:/app/packages/web/build
     environment:
       API_URL: https://webapp4051-api.sandorb.dev
+    restart: always
 
   web_server:
     image: nginx
@@ -49,8 +52,8 @@ services:
       LETSENCRYPT_HOST: webapp4051.sandorb.dev
     ports:
       - 4001:80
+    restart: always
 
 volumes:
   data:
   frontend:
-    #test
