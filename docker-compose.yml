@@ -12,6 +12,7 @@ services:
     volumes:
       - data:/var/lib/postgresql/data
     restart: always
+    network_mode: bridge
 
   api:
     build: ./
@@ -32,6 +33,7 @@ services:
     depends_on:
       - db
     restart: always
+    network_mode: bridge
 
   web:
     build:
@@ -42,6 +44,7 @@ services:
     environment:
       API_URL: https://webapp4051-api.sandorb.dev
       PUBLIC_URL: https://webapp4051.sandorb.dev
+    network_mode: bridge
 
   web_server:
     image: nginx
@@ -54,6 +57,7 @@ services:
     ports:
       - 80
     restart: always
+    network_mode: bridge
 
 volumes:
   data:
