@@ -42,7 +42,6 @@ services:
     environment:
       API_URL: https://webapp4051-api.sandorb.dev
       PUBLIC_URL: https://webapp4051.sandorb.dev
-    restart: always
 
   web_server:
     image: nginx
