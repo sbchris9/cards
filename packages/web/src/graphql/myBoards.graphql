@@ -1,0 +1,14 @@
+query MyBoards {
+  myBoards {
+    id
+    name
+    rows {
+      id
+      cards {
+        id
+        title
+        content
+      }
+    }
+  }
+}

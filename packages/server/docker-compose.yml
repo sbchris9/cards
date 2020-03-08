@@ -1,0 +1,30 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:11
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: dev
+      POSTGRES_MULTIPLE_DATABASES: test
+    volumes:
+      - data:/var/lib/postgresql/data
+      - ./scripts/postgres-init:/docker-entrypoint-initdb.d
+  pgweb:
+    container_name: pgweb
+    restart: always
+    image: sosedoff/pgweb
+    ports:
+      - '8081:8081'
+    links:
+      - db:db
+    environment:
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/dev?sslmode=disable
+    depends_on:
+      - db
+
+volumes:
+  data:

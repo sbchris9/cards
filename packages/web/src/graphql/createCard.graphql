@@ -1,0 +1,10 @@
+mutation CreateCard($rowId: ID!, $cardData: CardInput!) {
+  createCard(rowId: $rowId, cardData: $cardData) {
+    id
+    title
+    position
+    row {
+      id
+    }
+  }
+}

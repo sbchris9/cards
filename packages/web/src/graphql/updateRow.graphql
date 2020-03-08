@@ -1,0 +1,6 @@
+mutation UpdateRow($id: ID!, $position: Int) {
+  updateRow(id: $id, rowData: { position: $position }) {
+    id
+    position
+  }
+}

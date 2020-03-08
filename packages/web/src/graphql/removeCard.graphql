@@ -1,0 +1,8 @@
+mutation RemoveCard($id: ID!) {
+  removeCard(id: $id) {
+    id
+    row {
+      id
+    }
+  }
+}

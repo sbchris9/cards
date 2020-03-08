@@ -1,0 +1,6 @@
+mutation CreateRow($boardID: String!, $position: Int!) {
+  createRow(boardId: $boardID, position: $position) {
+    id
+    position
+  }
+}
