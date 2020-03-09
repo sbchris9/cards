@@ -15,8 +15,13 @@ import { Link as RouterLink, RouteComponentProps } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { registerSchema } from '@ww/common';
 import { formatValidationError } from '../utils/other';
-import { FormControl, FormHelperText } from '@material-ui/core';
+import { FormControl, FormHelperText, Snackbar } from '@material-ui/core';
 import { useRegisterMutation } from '../generated/graphql';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -50,7 +55,7 @@ type FormData = {
 };
 export const Register: React.FC<RouteComponentProps> = ({ history }) => {
   const classes = useStyles();
-  const [register] = useRegisterMutation();
+  const [register, { error, data, called }] = useRegisterMutation();
   const { register: registerField, handleSubmit, errors } = useForm<FormData>({
     validationSchema: registerSchema
   });
@@ -63,7 +68,7 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
       }
     });
 
-    if (success) return history.push('/login');
+    if (success.data?.register) return history.push('/login');
   });
 
   return (
@@ -75,6 +80,20 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
         <Typography component="h1" variant="h5">
           Register
         </Typography>
+        <Snackbar
+          open={!!error?.message}
+          autoHideDuration={6000}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert severity="error">{error?.message}</Alert>
+        </Snackbar>
+        <Snackbar
+          open={called && !data?.register}
+          autoHideDuration={6000}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert severity="error">Username is already taken.</Alert>
+        </Snackbar>
         <form className={classes.form} noValidate onSubmit={onSubmit}>
           <TextField
             variant="outlined"

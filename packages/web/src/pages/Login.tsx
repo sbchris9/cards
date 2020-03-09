@@ -17,6 +17,12 @@ import { useLoginMutation } from '../generated/graphql';
 import { useForm } from 'react-hook-form';
 import { formatValidationError } from '../utils/other';
 import { useStoreActions } from '../hooks';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
+
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -81,6 +87,13 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
         <Typography component="h1" variant="h5">
           Login
         </Typography>
+        <Snackbar
+          open={!!error?.message}
+          autoHideDuration={6000}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        >
+          <Alert severity="error">{error?.message}</Alert>
+        </Snackbar>
         <form className={classes.form} noValidate onSubmit={onSubmit}>
           <TextField
             variant="outlined"
