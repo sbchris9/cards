@@ -8,4 +8,4 @@ export const CREATE_CARD = 'CREATE_CARD';
 export const DELETE_CARD = 'DELETE_CARD';
 export const NEW_CARD = 'NEW_CARD';
 
-export const URI = process.env.API_URL || 'http://localhost:4000';
+export const URI = process.env.REACT_APP_API_URL || 'http://localhost:4000';
