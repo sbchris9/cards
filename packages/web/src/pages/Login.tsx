@@ -49,7 +49,7 @@ type FormData = {
 };
 export const Login: React.FC<RouteComponentProps> = ({ history }) => {
   const classes = useStyles();
-  const [login] = useLoginMutation();
+  const [login, { error }] = useLoginMutation();
   const { register, handleSubmit, errors } = useForm<FormData>({
     validationSchema: loginSchema
   });
@@ -93,7 +93,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
             autoComplete="username"
             autoFocus
             inputRef={register}
-            error={!!errors.username}
+            error={!!errors.username || !!error}
             helperText={formatValidationError(errors.username?.message)}
           />
           <TextField
