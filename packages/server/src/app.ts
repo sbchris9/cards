@@ -7,6 +7,7 @@ import { buildSchema } from 'type-graphql';
 import { createConnection, getConnectionOptions } from 'typeorm';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import helmet from 'helmet';
 
 import { User } from './entity/User';
 import {
@@ -18,6 +19,7 @@ import { setRefreshToken } from './utils/setRefreshToken';
 
 export const createApp = async () => {
   const app = express();
+  app.use(helmet());
   app.use(
     cors({
       credentials: true,
