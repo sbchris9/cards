@@ -179,12 +179,18 @@ export const TopBar: React.FC<TopBarProps> = ({ user }) => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem component={Link} to="/login">
-        <p>Login</p>
-      </MenuItem>
-      <MenuItem component={Link} to="/register">
-        <p>Register</p>
-      </MenuItem>
+      {user ? (
+        <MenuItem onClick={logout}>{user.username}</MenuItem>
+      ) : (
+        <>
+          <MenuItem component={Link} to="/login">
+            <p>Login</p>
+          </MenuItem>
+          <MenuItem component={Link} to="/register">
+            <p>Register</p>
+          </MenuItem>
+        </>
+      )}
     </Menu>
   );
 
