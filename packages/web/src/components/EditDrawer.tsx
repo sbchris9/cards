@@ -24,7 +24,7 @@ import {
   DELETE_ROW,
   DELETE_CARD
 } from '../config/constants';
-import { useStoreActions } from '../hooks';
+import { useStoreActions, useStoreState } from '../hooks';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -181,6 +181,7 @@ const CardCreator: React.FC = () => {
   const classes = useStyles();
   const theme = useTheme();
   const breakpoint = useMediaQuery(theme.breakpoints.down('sm'));
+  const { creationDisabled } = useStoreState(state => state.board);
 
   return (
     <Droppable droppableId={CREATE_CARD} type={CARD} isDropDisabled={true}>

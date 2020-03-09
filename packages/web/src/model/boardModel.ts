@@ -7,6 +7,7 @@ export interface BoardModel {
   mode: BoardMode;
   editedCardId: string;
   editedCardPosition: { x: number; y: number };
+  creationDisabled: number;
 
   setBoardMode: Action<BoardModel, BoardMode>;
   enterEditMode: Action<
@@ -14,6 +15,8 @@ export interface BoardModel {
     { cardId: string; cardRef: HTMLDivElement }
   >;
   setEditedCardId: Action<BoardModel, string>;
+  disableCreation: Action<BoardModel>;
+  enableCreation: Action<BoardModel>;
 }
 
 export const board: BoardModel = {
@@ -21,6 +24,7 @@ export const board: BoardModel = {
   mode: 'NORMAL',
   editedCardId: '',
   editedCardPosition: { x: 0, y: 0 },
+  creationDisabled: 0,
 
   // Actions
   setBoardMode: action((state, mode) => {
@@ -40,5 +44,11 @@ export const board: BoardModel = {
         window.innerHeight - theme.card.height * 1.5 - 64 - 20 // TODO: this shouldnt be hardcoded
       )
     };
+  }),
+  disableCreation: action(state => {
+    state.creationDisabled++;
+  }),
+  enableCreation: action(state => {
+    state.creationDisabled--;
   })
 };

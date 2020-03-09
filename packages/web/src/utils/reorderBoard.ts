@@ -23,6 +23,7 @@ import {
   UpdateCardMutation,
   UpdateCardMutationVariables
 } from '../generated/graphql';
+import store from '../store';
 
 const clientIdPrefix = 'CLIENT__';
 function generateClientId() {
@@ -82,6 +83,7 @@ export const reorderBoard = ({
     if (source.droppableId === CREATE_ROW) {
       if (destination.droppableId === DELETE_ROW) return;
       if (destination.droppableId === CREATE_ROW) return;
+      const enable = store.getActions().board.enableCreation;
       const clientId = generateClientId();
       waitingForId[clientId] = createRow({
         variables: { boardID: board.id, position: destination.index },
@@ -93,7 +95,10 @@ export const reorderBoard = ({
             position: destination.index
           }
         }
-      }).then(res => res.data?.createRow.id);
+      }).then(res => {
+        enable();
+        return res.data?.createRow.id;
+      });
     } else if (destination.droppableId === DELETE_ROW) {
       const rm = (id: string) =>
         removeRow({

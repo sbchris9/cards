@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { DragDropContext, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult, DragStart } from 'react-beautiful-dnd';
 import Fab from '@material-ui/core/Fab';
 import EditIcon from '@material-ui/icons/Edit';
 import { makeStyles } from '@material-ui/core';
@@ -26,6 +26,8 @@ import {
 } from '../utils/storeUpdaters';
 import { maxHeaderSize } from 'http';
 import { pauseResponseLink } from '..';
+import store from '../store';
+import { NEW_ROW } from '../config/constants';
 
 const useStyles = makeStyles({
   fab: {
@@ -42,8 +44,8 @@ interface Props {
 
 export const Home: React.FC<Props> = ({ loggedIn = true }) => {
   const classes = useStyles();
-  const boardMode = useStoreState(state => state.board.mode);
-  const setBoardMode = useStoreActions(actions => actions.board.setBoardMode);
+  const { mode: boardMode } = useStoreState(state => state.board);
+  const { setBoardMode } = useStoreActions(actions => actions.board);
   const [createRow] = useCreateRowMutation({
     update: updateOnCreateRow
   });
@@ -81,12 +83,14 @@ export const Home: React.FC<Props> = ({ loggedIn = true }) => {
     updateCard
   };
 
-  function onDragStart() {
-    pauseResponseLink.close();
+  function onDragStart(initial: DragStart) {
+    // pauseResponseLink.close();
+    if (initial.draggableId === NEW_ROW)
+      store.getActions().board.disableCreation();
   }
 
   function onDragEnd(result: DropResult) {
-    pauseResponseLink.open();
+    //pauseResponseLink.open();
     if (!result.destination) return;
 
     reorderBoard({
