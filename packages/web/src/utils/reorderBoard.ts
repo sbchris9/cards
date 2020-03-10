@@ -79,11 +79,11 @@ export const reorderBoard = ({
   //
   // ─── ROW ────────────────────────────────────────────────────────────────────────
   //
+  const enable = store.getActions().board.enableCreation;
   if (type === ROW) {
     if (source.droppableId === CREATE_ROW) {
-      if (destination.droppableId === DELETE_ROW) return;
       if (destination.droppableId === CREATE_ROW) return;
-      const enable = store.getActions().board.enableCreation;
+      if (destination.droppableId === DELETE_ROW) return enable();
       const clientId = generateClientId();
       waitingForId[clientId] = createRow({
         variables: { boardID: board.id, position: destination.index },
@@ -98,6 +98,9 @@ export const reorderBoard = ({
       }).then(res => {
         enable();
         return res.data?.createRow.id;
+      });
+      waitingForId[clientId].catch(_ => {
+        enable();
       });
     } else if (destination.droppableId === DELETE_ROW) {
       const rm = (id: string) =>
