@@ -6,37 +6,28 @@ import {
   FetchResult
 } from 'apollo-boost';
 
-function delayed<T>(value: T, delay: Promise<void>): Promise<T> {
-  return new Promise(resolve => {
-    delay.then(() => resolve(value));
-  });
-}
 // We need this to prevent state updates on drag
 export class PauseResponseLink extends ApolloLink {
-  private onOpen: Promise<void> = Promise.resolve();
+  private onResume: Promise<void> = Promise.resolve();
 
-  public open: () => void = () => null;
+  private _resume: () => void = () => null;
 
-  public close() {
-    this.onOpen = new Promise(resolve => {
-      this.open = resolve;
+  public resume() {
+    this._resume();
+  }
+
+  public pause() {
+    this.onResume = new Promise(resolve => {
+      this._resume = resolve;
     });
   }
 
   request(operation: Operation, forward: NextLink): Observable<FetchResult> {
     return new Observable(observer => {
       forward(operation).subscribe({
-        next: result => {
-          delayed(result, this.onOpen).then(observer.next.bind(observer));
-        },
-        error: observer.error.bind(observer),
-        complete: () => {
-          this.onOpen.then(() =>
-            setTimeout(() => {
-              observer.complete.bind(observer);
-            }, 1000)
-          );
-        }
+        next: result => this.onResume.then(() => observer.next(result)),
+        complete: () => this.onResume.then(() => observer.complete()),
+        error: err => observer.error(err)
       });
     });
   }
