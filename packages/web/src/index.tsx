@@ -76,8 +76,8 @@ const httpLink = createHttpLink({
 
 const client = new ApolloClient({
   link: ApolloLink.from([
-    // responseLoggerLink,
-    // pauseResponseLink,
+    //responseLoggerLink,
+    pauseResponseLink,
     tokenRefreshLink,
     authLink,
     httpLink

@@ -24,10 +24,7 @@ import {
   updateOnRemoveCard,
   updateOnUpdateCard
 } from '../utils/storeUpdaters';
-import { maxHeaderSize } from 'http';
 import { pauseResponseLink } from '..';
-import store from '../store';
-import { NEW_ROW } from '../config/constants';
 
 const useStyles = makeStyles({
   fab: {
@@ -45,9 +42,7 @@ interface Props {
 export const Home: React.FC<Props> = ({ loggedIn = true }) => {
   const classes = useStyles();
   const { mode: boardMode } = useStoreState(state => state.board);
-  const { setBoardMode, disableCreation, enableCreation } = useStoreActions(
-    actions => actions.board
-  );
+  const { setBoardMode } = useStoreActions(actions => actions.board);
   const [createRow] = useCreateRowMutation({
     update: updateOnCreateRow
   });
@@ -85,19 +80,13 @@ export const Home: React.FC<Props> = ({ loggedIn = true }) => {
     updateCard
   };
 
-  function onDragStart(initial: DragStart) {
-    // pauseResponseLink.close();
-    if (initial.draggableId === NEW_ROW) disableCreation();
+  function onDragStart() {
+    pauseResponseLink.pause();
   }
 
   function onDragEnd(result: DropResult) {
-    //pauseResponseLink.open();
-    if (!result.destination) {
-      if (result.draggableId === NEW_ROW) {
-        enableCreation();
-      }
-      return;
-    }
+    pauseResponseLink.resume();
+    if (!result.destination) return;
 
     reorderBoard({
       board,
@@ -114,7 +103,7 @@ export const Home: React.FC<Props> = ({ loggedIn = true }) => {
       {loading ? (
         'loading...'
       ) : board?.rows ? (
-        <DragDropContext onDragEnd={onDragEnd} onDragStart={onDragStart}>
+        <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
           <Board id={board.id} rows={board.rows} />
         </DragDropContext>
       ) : (

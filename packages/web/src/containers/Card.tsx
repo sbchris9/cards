@@ -118,9 +118,7 @@ interface Props extends BaseProps {
 export const Card: React.FC<Props> = React.memo(props => {
   const { id, index } = props;
   const classes = useStyles();
-  const { mode: boardMode, creationDisabled } = useStoreState(
-    state => state.board
-  );
+  const { mode: boardMode } = useStoreState(state => state.board);
   const enterEditMode = useStoreActions(actions => actions.board.enterEditMode);
 
   let el = useRef<HTMLDivElement>();
@@ -132,11 +130,7 @@ export const Card: React.FC<Props> = React.memo(props => {
   };
 
   return (
-    <Draggable
-      draggableId={id}
-      index={index}
-      isDragDisabled={!isReordering || !!creationDisabled}
-    >
+    <Draggable draggableId={id} index={index} isDragDisabled={!isReordering}>
       {({ dragHandleProps, draggableProps, innerRef }, snapshot) => (
         <div
           className={classes.holder}

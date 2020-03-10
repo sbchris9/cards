@@ -38,7 +38,6 @@ export class RowResolver {
   @FieldResolver()
   async cards(@Root() row: Row) {
     const cards = await row.cards;
-    console.log(cards);
     return cards.sort((a, b) => a.position - b.position);
   }
 
