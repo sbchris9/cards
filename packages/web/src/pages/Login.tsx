@@ -18,6 +18,7 @@ import { useForm } from 'react-hook-form';
 import { formatValidationError } from '../utils/other';
 import { useStoreActions } from '../hooks';
 import { ErrorMessage } from '../components/ErrorMessage';
+import { FormControl } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -40,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(1)
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
+    margin: theme.spacing(0.5, 0, 2)
   }
 }));
 
@@ -112,10 +113,12 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
             error={!!errors.password}
             helperText={formatValidationError(errors.password?.message)}
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
+          <FormControl component="fieldset">
+            <FormControlLabel
+              control={<Checkbox value="remember" color="primary" />}
+              label="Remember me"
+            />
+          </FormControl>
           <Button
             type="submit"
             fullWidth

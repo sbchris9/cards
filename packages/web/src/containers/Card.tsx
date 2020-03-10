@@ -42,7 +42,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: 'white',
     height: theme.card.titleHeight,
     fontSize: '16px',
-    display: 'flex'
+    display: 'flex',
+    whiteSpace: 'nowrap'
   },
   titleText: {
     margin: 'auto'
