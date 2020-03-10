@@ -45,7 +45,9 @@ interface Props {
 export const Home: React.FC<Props> = ({ loggedIn = true }) => {
   const classes = useStyles();
   const { mode: boardMode } = useStoreState(state => state.board);
-  const { setBoardMode } = useStoreActions(actions => actions.board);
+  const { setBoardMode, disableCreation, enableCreation } = useStoreActions(
+    actions => actions.board
+  );
   const [createRow] = useCreateRowMutation({
     update: updateOnCreateRow
   });
@@ -85,13 +87,17 @@ export const Home: React.FC<Props> = ({ loggedIn = true }) => {
 
   function onDragStart(initial: DragStart) {
     // pauseResponseLink.close();
-    if (initial.draggableId === NEW_ROW)
-      store.getActions().board.disableCreation();
+    if (initial.draggableId === NEW_ROW) disableCreation();
   }
 
   function onDragEnd(result: DropResult) {
     //pauseResponseLink.open();
-    if (!result.destination) return;
+    if (!result.destination) {
+      if (result.draggableId === NEW_ROW) {
+        enableCreation();
+      }
+      return;
+    }
 
     reorderBoard({
       board,
