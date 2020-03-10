@@ -182,14 +182,14 @@ export const TopBar: React.FC<TopBarProps> = ({ user }) => {
       {user ? (
         <MenuItem onClick={logout}>{user.username}</MenuItem>
       ) : (
-        <>
-          <MenuItem component={Link} to="/login">
+        [
+          <MenuItem component={Link} to="/login" key={'login'}>
             <p>Login</p>
-          </MenuItem>
-          <MenuItem component={Link} to="/register">
+          </MenuItem>,
+          <MenuItem component={Link} to="/register" key={'register'}>
             <p>Register</p>
           </MenuItem>
-        </>
+        ]
       )}
     </Menu>
   );
