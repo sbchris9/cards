@@ -14,9 +14,6 @@ export const useHandleClickOutside = (
   ref: React.MutableRefObject<any>,
   handler: () => void
 ) => {
-  /**
-   * Alert if clicked on outside of element
-   */
   function handleClickOutside(event: MouseEvent) {
     if (!ref.current?.contains(event.target)) {
       handler();
@@ -24,10 +21,8 @@ export const useHandleClickOutside = (
   }
 
   useEffect(() => {
-    // Bind the event listener
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      // Unbind the event listener on clean up
       document.removeEventListener('mousedown', handleClickOutside);
     };
   });
