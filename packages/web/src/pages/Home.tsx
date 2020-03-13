@@ -1,20 +1,20 @@
 import React, { useEffect } from 'react';
-import { DragDropContext, DropResult, DragStart } from 'react-beautiful-dnd';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import Fab from '@material-ui/core/Fab';
 import EditIcon from '@material-ui/icons/Edit';
 import { makeStyles } from '@material-ui/core';
-import { Redirect } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { Board } from '../containers/Board';
 import { reorderBoard } from '../utils/reorderBoard';
 import { useStoreState, useStoreActions } from '../hooks';
 import {
-  useMyBoardsQuery,
   useCreateRowMutation,
   useRemoveRowMutation,
   useUpdateRowMutation,
   useCreateCardMutation,
   useRemoveCardMutation,
-  useUpdateCardMutation
+  useUpdateCardMutation,
+  useMyBoardsLazyQuery
 } from '../generated/graphql';
 import {
   updateOnCreateRow,
@@ -25,6 +25,8 @@ import {
   updateOnUpdateCard
 } from '../utils/storeUpdaters';
 import { pauseResponseLink } from '..';
+import { DisplaySpinner } from '../components/DisplaySpinner';
+import { validateToken } from '../utils/other';
 
 const useStyles = makeStyles({
   fab: {
@@ -35,13 +37,12 @@ const useStyles = makeStyles({
   }
 });
 
-interface Props {
-  loggedIn?: boolean;
-}
-
-export const Home: React.FC<Props> = ({ loggedIn = true }) => {
+export const Home: React.FC<RouteComponentProps> = ({ history }) => {
   const classes = useStyles();
-  const { mode: boardMode } = useStoreState(state => state.board);
+  const {
+    board: { mode: boardMode },
+    auth: { accessToken }
+  } = useStoreState(state => state);
   const { setBoardMode } = useStoreActions(actions => actions.board);
   const [createRow] = useCreateRowMutation({
     update: updateOnCreateRow
@@ -62,13 +63,17 @@ export const Home: React.FC<Props> = ({ loggedIn = true }) => {
     update: updateOnUpdateCard
   });
 
-  const { loading, data, refetch } = useMyBoardsQuery();
+  const [myBoardsQuery, { loading, data }] = useMyBoardsLazyQuery({
+    fetchPolicy: 'network-only'
+  });
 
   useEffect(() => {
-    refetch();
-  }, []);
+    if (!validateToken(accessToken)) return history.push('/login');
+  }, [accessToken, history]);
 
-  if (!loggedIn) return <Redirect to="/login" />;
+  useEffect(() => {
+    myBoardsQuery();
+  }, [myBoardsQuery]);
 
   const board = data?.myBoards[0] as Board;
   const boardMutations = {
@@ -101,7 +106,7 @@ export const Home: React.FC<Props> = ({ loggedIn = true }) => {
   return (
     <>
       {loading ? (
-        'loading...'
+        <DisplaySpinner />
       ) : board?.rows ? (
         <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
           <Board id={board.id} rows={board.rows} />

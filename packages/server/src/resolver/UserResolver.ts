@@ -90,7 +90,6 @@ export class UserResolver {
   //
 
   @Mutation(() => Boolean)
-  @UseMiddleware(auth)
   async logout(@Ctx() { res }: Context): Promise<Boolean> {
     setRefreshToken(res, '');
     return true;

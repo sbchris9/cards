@@ -8,17 +8,21 @@ import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Home } from './pages/Home';
 import { theme } from './config/theme';
-import { useMeQuery } from './generated/graphql';
-import store from './store';
+import { useMeLazyQuery } from './generated/graphql';
 import { useStoreState } from 'easy-peasy';
 import { URI } from './config/constants';
+import { DisplaySpinner } from './components/DisplaySpinner';
+import { useStoreActions } from './hooks';
 
 export const AppBase: React.FC = () => {
-  const accessToken = useStoreState(store => store.auth.accessToken);
-  const { data, error } = useMeQuery({
-    fetchPolicy: 'network-only',
-    variables: { accessToken }
+  const { accessToken } = useStoreState(store => store.auth);
+  const [meQuery, { data, error }] = useMeLazyQuery({
+    fetchPolicy: 'network-only'
   });
+
+  useEffect(() => {
+    meQuery();
+  }, [meQuery, accessToken]);
 
   return (
     <MuiThemeProvider theme={theme}>
@@ -26,11 +30,7 @@ export const AppBase: React.FC = () => {
         <TopBar user={error ? undefined : data?.me} />
         <Content>
           <Switch>
-            <Route
-              path="/"
-              exact
-              component={() => <Home loggedIn={!!accessToken} />}
-            />
+            <Route path="/" exact component={Home} />
             <Route path="/register" component={Register} />
             <Route path="/login" component={Login} />
           </Switch>
@@ -43,6 +43,7 @@ export const AppBase: React.FC = () => {
 
 export const App = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const { setAccessToken } = useStoreActions(actions => actions.auth);
 
   useEffect(() => {
     fetch(`${URI}/refresh_token`, {
@@ -51,16 +52,16 @@ export const App = () => {
     })
       .then(async res => {
         const { accessToken } = await res.json();
-        store.getActions().auth.setAccessToken(accessToken);
+        setAccessToken(accessToken);
         setIsLoading(false);
       })
       .catch(e => {
         setIsLoading(false);
       });
-  }, []);
+  }, [setAccessToken]);
 
   if (isLoading) {
-    return <div>loading........</div>;
+    return <DisplaySpinner />;
   }
 
   return <AppBase />;

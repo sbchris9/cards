@@ -11,13 +11,18 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import { Link as RouterLink, RouteComponentProps } from 'react-router-dom';
+import {
+  Link as RouterLink,
+  RouteComponentProps,
+  Redirect
+} from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { registerSchema } from '@ww/common';
-import { formatValidationError } from '../utils/other';
+import { formatValidationError, validateToken } from '../utils/other';
 import { FormControl, FormHelperText } from '@material-ui/core';
 import { useRegisterMutation } from '../generated/graphql';
 import { ErrorMessage } from '../components/ErrorMessage';
+import { useStoreState } from '../hooks';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -55,6 +60,10 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
   const { register: registerField, handleSubmit, errors } = useForm<FormData>({
     validationSchema: registerSchema
   });
+  const { accessToken } = useStoreState(state => state.auth);
+  const loggedIn = validateToken(accessToken);
+
+  if (loggedIn) return <Redirect to="/" />;
 
   const onSubmit = handleSubmit(async ({ username, password }) => {
     const success = await register({

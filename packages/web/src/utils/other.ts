@@ -1,5 +1,6 @@
 import { MyBoardsQuery } from '../generated/graphql';
 import { Card } from '../containers/Card';
+import JwtDecode from 'jwt-decode';
 
 export function capitalizeFirstLetter(string?: string) {
   if (!string) return '';
@@ -22,4 +23,14 @@ export function findCardOnBoardQuery(
     });
   });
   return card || undefined;
+}
+
+export function validateToken(token?: string) {
+  if (!token) return false;
+  try {
+    const { exp } = JwtDecode(token);
+    return Date.now() < (exp as number) * 1000;
+  } catch (error) {
+    return false;
+  }
 }

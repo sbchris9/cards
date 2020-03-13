@@ -11,12 +11,16 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
-import { Link as RouterLink, RouteComponentProps } from 'react-router-dom';
+import {
+  Link as RouterLink,
+  RouteComponentProps,
+  Redirect
+} from 'react-router-dom';
 import { loginSchema } from '@ww/common';
 import { useLoginMutation } from '../generated/graphql';
 import { useForm } from 'react-hook-form';
-import { formatValidationError } from '../utils/other';
-import { useStoreActions } from '../hooks';
+import { formatValidationError, validateToken } from '../utils/other';
+import { useStoreActions, useStoreState } from '../hooks';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { FormControl } from '@material-ui/core';
 
@@ -55,9 +59,13 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
   const { register, handleSubmit, errors } = useForm<FormData>({
     validationSchema: loginSchema
   });
+  const { accessToken } = useStoreState(state => state.auth);
   const setAccessToken = useStoreActions(
     actions => actions.auth.setAccessToken
   );
+  const loggedIn = validateToken(accessToken);
+
+  if (loggedIn) return <Redirect to="/" />;
 
   const onSubmit = handleSubmit(async ({ username, password }) => {
     const response = await login({

@@ -2,7 +2,7 @@ import { User } from './entity/User';
 
 import { sign as signT, verify as verifyT } from 'jsonwebtoken';
 
-const accessTokenExpiresIn = '15m'; //15m
+const accessTokenExpiresIn = '10s'; //15m
 const refreshTokenExpiresIn = '1d'; //7d
 
 type TokenSecretTypes = 'ACCESS' | 'REFRESH';

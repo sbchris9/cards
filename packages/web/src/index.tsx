@@ -15,14 +15,6 @@ import { StoreProvider } from 'easy-peasy';
 import { URI } from './config/constants';
 import { PauseResponseLink } from './PauseResponseLink';
 
-const responseLoggerLink = new ApolloLink((operation, forward) => {
-  const op = forward(operation);
-  op.subscribe({
-    next: res => console.log(res)
-  });
-  return op;
-});
-
 export const pauseResponseLink = new PauseResponseLink();
 
 // Gets a new access token
@@ -76,7 +68,6 @@ const httpLink = createHttpLink({
 
 const client = new ApolloClient({
   link: ApolloLink.from([
-    //responseLoggerLink,
     pauseResponseLink,
     tokenRefreshLink,
     authLink,

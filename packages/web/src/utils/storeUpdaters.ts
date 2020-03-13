@@ -10,7 +10,6 @@ import {
   UpdateCardMutation
 } from '../generated/graphql';
 import { Row } from '../containers/Row';
-import { Card } from '../containers/Card';
 
 export const updateOnCreateRow: MutationUpdaterFn<CreateRowMutation> = (
   cache,

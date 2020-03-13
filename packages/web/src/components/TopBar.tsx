@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   fade,
   makeStyles,
@@ -11,12 +11,30 @@ import InputBase from '@material-ui/core/InputBase';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
+import ExitIcon from '@material-ui/icons/ExitToAppOutlined';
+import DeleteIcon from '@material-ui/icons/DeleteForeverOutlined';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import { Button } from '@material-ui/core';
+import {
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  ListItemIcon,
+  ListItemText
+} from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { IUser } from '@ww/common';
 import { useStoreActions } from '../hooks';
-import { useLogoutMutation } from '../generated/graphql';
+import {
+  useLogoutMutation,
+  MyBoardsQuery,
+  MyBoardsDocument,
+  useDeleteAccountMutation
+} from '../generated/graphql';
+import { useApolloClient } from '@apollo/react-hooks';
+import { gql } from 'apollo-boost';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -110,6 +128,10 @@ const useStyles = makeStyles((theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         display: 'none'
       }
+    },
+    deleteAccount: {
+      color: theme.palette.error.main,
+      borderColor: theme.palette.error.main
     }
   })
 );
@@ -119,6 +141,7 @@ interface TopBarProps {
 }
 
 export const TopBar: React.FC<TopBarProps> = ({ user }) => {
+  const client = useApolloClient();
   const setAccessToken = useStoreActions(
     actions => actions.auth.setAccessToken
   );
@@ -133,6 +156,8 @@ export const TopBar: React.FC<TopBarProps> = ({ user }) => {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
+  const [deleteAccount] = useDeleteAccountMutation();
+
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
   };
@@ -142,14 +167,41 @@ export const TopBar: React.FC<TopBarProps> = ({ user }) => {
     handleMobileMenuClose();
   };
 
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const openDeleteDialog = () => {
+    setDeleteDialogOpen(true);
+  };
+  const closeDeleteDialog = () => {
+    handleMenuClose();
+    setDeleteDialogOpen(false);
+  };
+
   const logout = () => {
+    handleMenuClose();
     logoutMutation().then(() => {
       setAccessToken('');
     });
+    client.writeQuery<MyBoardsQuery>({
+      query: gql`
+        ${MyBoardsDocument}
+      `,
+      data: { __typename: 'Query', myBoards: [] }
+    });
+  };
+
+  const deleteAcc = () => {
+    deleteAccount();
+    logout();
+    closeDeleteDialog();
+    handleMenuClose();
   };
 
   const menuId = 'primary-search-account-menu';
@@ -163,8 +215,19 @@ export const TopBar: React.FC<TopBarProps> = ({ user }) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={logout}>
+        <ListItemIcon>
+          <ExitIcon />
+        </ListItemIcon>
+        <ListItemText primary="Logout" />
+      </MenuItem>
+
+      <MenuItem onClick={openDeleteDialog} className={classes.deleteAccount}>
+        <ListItemIcon>
+          <DeleteIcon color="error" />
+        </ListItemIcon>
+        <ListItemText primary="Delete Account" />
+      </MenuItem>
     </Menu>
   );
 
@@ -194,6 +257,35 @@ export const TopBar: React.FC<TopBarProps> = ({ user }) => {
     </Menu>
   );
 
+  const deleteDialog = (
+    <Dialog
+      open={deleteDialogOpen}
+      onClose={closeDeleteDialog}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dialog-description"
+    >
+      <DialogTitle id="alert-dialog-title">{'Deleting Account'}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id="alert-dialog-description">
+          Are you sure you want to delete your account? This action is
+          irreversible!
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={closeDeleteDialog} color="primary" autoFocus>
+          Cancel
+        </Button>
+        <Button
+          onClick={deleteAcc}
+          className={classes.deleteAccount}
+          variant="outlined"
+        >
+          DELETE
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+
   return (
     <>
       <AppBar position="static" color="inherit" elevation={1}>
@@ -218,7 +310,7 @@ export const TopBar: React.FC<TopBarProps> = ({ user }) => {
           </div>
           <div className={`${classes.sectionDesktop}`}>
             {user ? (
-              <Button className={classes.menuItem} onClick={logout}>
+              <Button className={classes.menuItem} onClick={handleMenuOpen}>
                 {user.username}
               </Button>
             ) : (
@@ -255,6 +347,7 @@ export const TopBar: React.FC<TopBarProps> = ({ user }) => {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
+      {deleteDialog}
     </>
   );
 };
