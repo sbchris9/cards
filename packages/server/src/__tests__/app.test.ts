@@ -3,7 +3,7 @@ import { createApp } from '../app';
 import { Express } from 'express';
 
 const username = 'bob@bob.bob';
-const password = 'bob';
+const password = 'bobbobbbb';
 
 let app: Express;
 let accessToken: string;
@@ -34,7 +34,7 @@ describe('User', () => {
   it('Should register successfully with json', async () => {
     const { body } = await makeGqlCall(`
         mutation {
-          register(username: "${username}", password: "${password}")
+          register(username: "${username}", password: "${password}", terms: true)
         }
       `).expect(200);
 
@@ -92,13 +92,13 @@ describe('User', () => {
     boardId = body.data.createBoard.id;
 
     expect(body.data.createBoard.name).toBe('My_Board');
-    expect(body.data.createBoard.position).toBe(0);
+    expect(body.data.createBoard.position).toBe(1);
   });
 
   it('Should be able to create row', async () => {
     const { body } = await makeAuthGqlCall(`
         mutation {
-          createRow (boardId: "${boardId}")
+          createRow (boardId: "${boardId}" position: 0)
           {
             id
             position

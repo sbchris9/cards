@@ -92,8 +92,7 @@ export class UserResolver {
     setRefreshToken(res, createRefreshToken(user));
 
     return {
-      accessToken: createAccessToken(user),
-      user
+      accessToken: createAccessToken(user)
     };
   }
 
