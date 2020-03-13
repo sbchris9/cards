@@ -185,10 +185,9 @@ export const TopBar: React.FC = () => {
   };
 
   const deleteAccount = () => {
-    deleteAccountMutation();
-    closeDeleteDialog();
-    handleMenuClose();
-    logout();
+    deleteAccountMutation().then(() => {
+      logout();
+    });
   };
 
   const menuId = 'primary-search-account-menu';
