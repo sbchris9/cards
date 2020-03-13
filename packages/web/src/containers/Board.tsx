@@ -34,10 +34,23 @@ export interface Board extends IBoard {
 interface Props extends Board {}
 
 export const Board: React.FC<Props> = ({ id, rows }) => {
-  const mode = useStoreState(state => state.board.mode);
+  const { mode, search } = useStoreState(state => state.board);
   const isReordering = mode !== 'NORMAL';
   const isEditing = mode === 'EDITING';
   const classes = useStyles({ isReordering });
+  const s = search.toLowerCase();
+  const filteredRows = rows
+    .map(row => ({
+      ...row,
+      cards: row.cards.filter(
+        card =>
+          card.title?.toLowerCase().includes(s) ||
+          card.content?.toLowerCase().includes(s)
+      )
+    }))
+    .filter(row => row.cards.length);
+
+  const displayRows = isReordering ? rows : filteredRows;
 
   return (
     <>
@@ -46,7 +59,7 @@ export const Board: React.FC<Props> = ({ id, rows }) => {
       <Droppable droppableId={id} type={ROW}>
         {({ droppableProps, innerRef, placeholder }) => (
           <div ref={innerRef} className={classes.body} {...droppableProps}>
-            {rows.map((row, i) => (
+            {displayRows.map((row, i) => (
               <Row id={row.id} key={row.id} cards={row.cards} index={i} />
             ))}
             {placeholder}

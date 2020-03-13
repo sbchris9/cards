@@ -7,6 +7,7 @@ export interface BoardModel {
   mode: BoardMode;
   editedCardId: string;
   editedCardPosition: { x: number; y: number };
+  search: string;
 
   setBoardMode: Action<BoardModel, BoardMode>;
   enterEditMode: Action<
@@ -14,6 +15,7 @@ export interface BoardModel {
     { cardId: string; cardRef: HTMLDivElement }
   >;
   setEditedCardId: Action<BoardModel, string>;
+  setSearch: Action<BoardModel, string>;
 }
 
 export const board: BoardModel = {
@@ -21,6 +23,7 @@ export const board: BoardModel = {
   mode: 'NORMAL',
   editedCardId: '',
   editedCardPosition: { x: 0, y: 0 },
+  search: '',
 
   // Actions
   setBoardMode: action((state, mode) => {
@@ -40,5 +43,8 @@ export const board: BoardModel = {
         window.innerHeight - theme.card.height * 1.5 - 64 - 20 // TODO: this shouldnt be hardcoded
       )
     };
+  }),
+  setSearch: action((state, payload) => {
+    state.search = payload;
   })
 };

@@ -30,6 +30,7 @@ import {
   useDeleteAccountMutation,
   useMeQuery
 } from '../generated/graphql';
+import { useStoreActions, useStoreState } from '../hooks';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -141,6 +142,8 @@ export const TopBar: React.FC = () => {
       window.location.reload();
     }
   });
+  const { setSearch } = useStoreActions(actions => actions.board);
+  const { search: searchValue } = useStoreState(state => state.board);
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [
@@ -188,6 +191,10 @@ export const TopBar: React.FC = () => {
     deleteAccountMutation().then(() => {
       logout();
     });
+  };
+
+  const search = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
   };
 
   const menuId = 'primary-search-account-menu';
@@ -286,11 +293,13 @@ export const TopBar: React.FC = () => {
               <SearchIcon />
             </div>
             <InputBase
-              placeholder="Search…"
+              placeholder="Filter…"
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput
               }}
+              onChange={search}
+              value={searchValue}
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
