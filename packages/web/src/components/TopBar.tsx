@@ -25,16 +25,11 @@ import {
   ListItemText
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import { IUser } from '@ww/common';
-import { useStoreActions } from '../hooks';
 import {
   useLogoutMutation,
-  MyBoardsQuery,
-  MyBoardsDocument,
-  useDeleteAccountMutation
+  useDeleteAccountMutation,
+  useMeQuery
 } from '../generated/graphql';
-import { useApolloClient } from '@apollo/react-hooks';
-import { gql } from 'apollo-boost';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -136,16 +131,16 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface TopBarProps {
-  user?: IUser;
-}
-
-export const TopBar: React.FC<TopBarProps> = ({ user }) => {
-  const client = useApolloClient();
-  const setAccessToken = useStoreActions(
-    actions => actions.auth.setAccessToken
-  );
-  const [logoutMutation] = useLogoutMutation();
+export const TopBar: React.FC = () => {
+  const { data } = useMeQuery({
+    fetchPolicy: 'network-only'
+  });
+  const user = data?.me;
+  const [logoutMutation] = useLogoutMutation({
+    onCompleted: () => {
+      window.location.reload();
+    }
+  });
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [
@@ -156,7 +151,7 @@ export const TopBar: React.FC<TopBarProps> = ({ user }) => {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const [deleteAccount] = useDeleteAccountMutation();
+  const [deleteAccountMutation] = useDeleteAccountMutation();
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -185,23 +180,14 @@ export const TopBar: React.FC<TopBarProps> = ({ user }) => {
   };
 
   const logout = () => {
+    logoutMutation();
     handleMenuClose();
-    logoutMutation().then(() => {
-      setAccessToken('');
-    });
-    client.writeQuery<MyBoardsQuery>({
-      query: gql`
-        ${MyBoardsDocument}
-      `,
-      data: { __typename: 'Query', myBoards: [] }
-    });
   };
 
-  const deleteAcc = () => {
-    deleteAccount();
-    logout();
-    closeDeleteDialog();
-    handleMenuClose();
+  const deleteAccount = () => {
+    deleteAccountMutation().then(() => {
+      logout();
+    });
   };
 
   const menuId = 'primary-search-account-menu';
@@ -276,7 +262,7 @@ export const TopBar: React.FC<TopBarProps> = ({ user }) => {
           Cancel
         </Button>
         <Button
-          onClick={deleteAcc}
+          onClick={deleteAccount}
           className={classes.deleteAccount}
           variant="outlined"
         >

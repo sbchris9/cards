@@ -8,26 +8,15 @@ import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Home } from './pages/Home';
 import { theme } from './config/theme';
-import { useMeLazyQuery } from './generated/graphql';
-import { useStoreState } from 'easy-peasy';
 import { URI } from './config/constants';
 import { DisplaySpinner } from './components/DisplaySpinner';
 import { useStoreActions } from './hooks';
 
 export const AppBase: React.FC = () => {
-  const { accessToken } = useStoreState(store => store.auth);
-  const [meQuery, { data, error }] = useMeLazyQuery({
-    fetchPolicy: 'network-only'
-  });
-
-  useEffect(() => {
-    meQuery();
-  }, [meQuery, accessToken]);
-
   return (
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
-        <TopBar user={error ? undefined : data?.me} />
+        <TopBar />
         <Content>
           <Switch>
             <Route path="/" exact component={Home} />

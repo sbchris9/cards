@@ -112,7 +112,7 @@ export const Home: React.FC<RouteComponentProps> = ({ history }) => {
           <Board id={board.id} rows={board.rows} />
         </DragDropContext>
       ) : (
-        'No rows'
+        <DisplaySpinner />
       )}
       {boardMode === 'NORMAL' && (
         <Fab

@@ -4,172 +4,172 @@ import * as ApolloReactHooks from '@apollo/react-hooks';
 export type Maybe<T> = T | null;
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string,
-  String: string,
-  Boolean: boolean,
-  Int: number,
-  Float: number,
+  ID: string;
+  String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
 };
 
 export type Board = {
-   __typename?: 'Board',
-  id: Scalars['ID'],
-  position: Scalars['Int'],
-  name: Scalars['String'],
-  user: User,
-  rows: Array<Row>,
+   __typename?: 'Board';
+  id: Scalars['ID'];
+  position: Scalars['Int'];
+  name: Scalars['String'];
+  user: User;
+  rows: Array<Row>;
 };
 
 export type BoardInput = {
-  name: Scalars['String'],
-  position?: Maybe<Scalars['Int']>,
+  name: Scalars['String'];
+  position?: Maybe<Scalars['Int']>;
 };
 
 export type Card = {
-   __typename?: 'Card',
-  id: Scalars['ID'],
-  position: Scalars['Int'],
-  title?: Maybe<Scalars['String']>,
-  content?: Maybe<Scalars['String']>,
-  row: Row,
+   __typename?: 'Card';
+  id: Scalars['ID'];
+  position: Scalars['Int'];
+  title?: Maybe<Scalars['String']>;
+  content?: Maybe<Scalars['String']>;
+  row: Row;
 };
 
 export type CardInput = {
-  title?: Maybe<Scalars['String']>,
-  content?: Maybe<Scalars['String']>,
-  rowId?: Maybe<Scalars['String']>,
-  position?: Maybe<Scalars['Int']>,
+  title?: Maybe<Scalars['String']>;
+  content?: Maybe<Scalars['String']>;
+  rowId?: Maybe<Scalars['String']>;
+  position?: Maybe<Scalars['Int']>;
 };
 
 export type LoginResponse = {
-   __typename?: 'LoginResponse',
-  user?: Maybe<User>,
-  accessToken: Scalars['String'],
+   __typename?: 'LoginResponse';
+  user?: Maybe<User>;
+  accessToken: Scalars['String'];
 };
 
 export type Mutation = {
-   __typename?: 'Mutation',
-  createBoard: Board,
-  updateBoard: Board,
-  removeBoard: Board,
-  createCard: Card,
-  updateCard: Card,
-  removeCard: Card,
-  createRow: Row,
-  updateRow: Row,
-  removeRow: Row,
-  register: Scalars['Boolean'],
-  login: LoginResponse,
-  logout: Scalars['Boolean'],
-  deleteAccount: Scalars['Boolean'],
-  revokeRefreshTokensForUser: Scalars['Boolean'],
+   __typename?: 'Mutation';
+  createBoard: Board;
+  updateBoard: Board;
+  removeBoard: Board;
+  createCard: Card;
+  updateCard: Card;
+  removeCard: Card;
+  createRow: Row;
+  updateRow: Row;
+  removeRow: Row;
+  register: Scalars['Boolean'];
+  login: LoginResponse;
+  logout: Scalars['Boolean'];
+  deleteAccount: Scalars['Boolean'];
+  revokeRefreshTokensForUser: Scalars['Boolean'];
 };
 
 
 export type MutationCreateBoardArgs = {
-  boardData: BoardInput
+  boardData: BoardInput;
 };
 
 
 export type MutationUpdateBoardArgs = {
-  boardData: BoardInput,
-  id: Scalars['ID']
+  boardData: BoardInput;
+  id: Scalars['ID'];
 };
 
 
 export type MutationRemoveBoardArgs = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
 export type MutationCreateCardArgs = {
-  cardData: CardInput,
-  rowId: Scalars['ID']
+  cardData: CardInput;
+  rowId: Scalars['ID'];
 };
 
 
 export type MutationUpdateCardArgs = {
-  cardData: CardInput,
-  id: Scalars['ID']
+  cardData: CardInput;
+  id: Scalars['ID'];
 };
 
 
 export type MutationRemoveCardArgs = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
 export type MutationCreateRowArgs = {
-  position: Scalars['Int'],
-  boardId: Scalars['String']
+  position: Scalars['Int'];
+  boardId: Scalars['String'];
 };
 
 
 export type MutationUpdateRowArgs = {
-  rowData: RowInput,
-  id: Scalars['ID']
+  rowData: RowInput;
+  id: Scalars['ID'];
 };
 
 
 export type MutationRemoveRowArgs = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
 export type MutationRegisterArgs = {
-  password: Scalars['String'],
-  username: Scalars['String']
+  password: Scalars['String'];
+  username: Scalars['String'];
 };
 
 
 export type MutationLoginArgs = {
-  password: Scalars['String'],
-  username: Scalars['String']
+  password: Scalars['String'];
+  username: Scalars['String'];
 };
 
 
 export type MutationRevokeRefreshTokensForUserArgs = {
-  userId: Scalars['Int']
+  userId: Scalars['Int'];
 };
 
 export type Query = {
-   __typename?: 'Query',
-  myBoards: Array<Board>,
-  getBoard?: Maybe<Board>,
-  fail: Scalars['Boolean'],
-  hello: Scalars['String'],
-  me: User,
+   __typename?: 'Query';
+  myBoards: Array<Board>;
+  getBoard?: Maybe<Board>;
+  fail: Scalars['Boolean'];
+  hello: Scalars['String'];
+  me: User;
 };
 
 
 export type QueryGetBoardArgs = {
-  id: Scalars['String']
+  id: Scalars['String'];
 };
 
 export type Row = {
-   __typename?: 'Row',
-  id: Scalars['ID'],
-  position: Scalars['Int'],
-  color?: Maybe<Scalars['String']>,
-  board: Board,
-  cards: Array<Card>,
+   __typename?: 'Row';
+  id: Scalars['ID'];
+  position: Scalars['Int'];
+  color?: Maybe<Scalars['String']>;
+  board: Board;
+  cards: Array<Card>;
 };
 
 export type RowInput = {
-  color?: Maybe<Scalars['String']>,
-  position?: Maybe<Scalars['Int']>,
+  color?: Maybe<Scalars['String']>;
+  position?: Maybe<Scalars['Int']>;
 };
 
 export type User = {
-   __typename?: 'User',
-  id: Scalars['ID'],
-  username: Scalars['String'],
-  boards: Array<Board>,
+   __typename?: 'User';
+  id: Scalars['ID'];
+  username: Scalars['String'];
+  boards: Array<Board>;
 };
 
 export type CreateCardMutationVariables = {
-  rowId: Scalars['ID'],
-  cardData: CardInput
+  rowId: Scalars['ID'];
+  cardData: CardInput;
 };
 
 
@@ -186,8 +186,8 @@ export type CreateCardMutation = (
 );
 
 export type CreateRowMutationVariables = {
-  boardID: Scalars['String'],
-  position: Scalars['Int']
+  boardID: Scalars['String'];
+  position: Scalars['Int'];
 };
 
 
@@ -216,8 +216,8 @@ export type HelloQuery = (
 );
 
 export type LoginMutationVariables = {
-  username: Scalars['String'],
-  password: Scalars['String']
+  username: Scalars['String'];
+  password: Scalars['String'];
 };
 
 
@@ -268,8 +268,8 @@ export type MyBoardsQuery = (
 );
 
 export type RegisterMutationVariables = {
-  username: Scalars['String'],
-  password: Scalars['String']
+  username: Scalars['String'];
+  password: Scalars['String'];
 };
 
 
@@ -279,7 +279,7 @@ export type RegisterMutation = (
 );
 
 export type RemoveCardMutationVariables = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
@@ -296,7 +296,7 @@ export type RemoveCardMutation = (
 );
 
 export type RemoveRowMutationVariables = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
@@ -309,8 +309,8 @@ export type RemoveRowMutation = (
 );
 
 export type UpdateCardMutationVariables = {
-  id: Scalars['ID'],
-  cardData: CardInput
+  id: Scalars['ID'];
+  cardData: CardInput;
 };
 
 
@@ -327,8 +327,8 @@ export type UpdateCardMutation = (
 );
 
 export type UpdateRowMutationVariables = {
-  id: Scalars['ID'],
-  position?: Maybe<Scalars['Int']>
+  id: Scalars['ID'];
+  position?: Maybe<Scalars['Int']>;
 };
 
 
