@@ -117,6 +117,7 @@ export type MutationRemoveRowArgs = {
 
 
 export type MutationRegisterArgs = {
+  terms: Scalars['Boolean'];
   password: Scalars['String'];
   username: Scalars['String'];
 };
@@ -270,6 +271,7 @@ export type MyBoardsQuery = (
 export type RegisterMutationVariables = {
   username: Scalars['String'];
   password: Scalars['String'];
+  terms: Scalars['Boolean'];
 };
 
 
@@ -609,8 +611,8 @@ export type MyBoardsQueryHookResult = ReturnType<typeof useMyBoardsQuery>;
 export type MyBoardsLazyQueryHookResult = ReturnType<typeof useMyBoardsLazyQuery>;
 export type MyBoardsQueryResult = ApolloReactCommon.QueryResult<MyBoardsQuery, MyBoardsQueryVariables>;
 export const RegisterDocument = gql`
-    mutation Register($username: String!, $password: String!) {
-  register(username: $username, password: $password)
+    mutation Register($username: String!, $password: String!, $terms: Boolean!) {
+  register(username: $username, password: $password, terms: $terms)
 }
     `;
 export type RegisterMutationFn = ApolloReactCommon.MutationFunction<RegisterMutation, RegisterMutationVariables>;
@@ -630,6 +632,7 @@ export type RegisterMutationFn = ApolloReactCommon.MutationFunction<RegisterMuta
  *   variables: {
  *      username: // value for 'username'
  *      password: // value for 'password'
+ *      terms: // value for 'terms'
  *   },
  * });
  */

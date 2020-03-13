@@ -18,6 +18,7 @@ import { getConnection } from 'typeorm';
 import { UserInputError } from 'apollo-server-express';
 import { setRefreshToken } from '../utils/setRefreshToken';
 import { Board } from '../entity/Board';
+import { registerSchema, loginSchema } from '@ww/common';
 
 @ObjectType()
 class LoginResponse {
@@ -36,8 +37,14 @@ export class UserResolver {
   @Mutation(() => Boolean)
   async register(
     @Arg('username') username: string,
-    @Arg('password') password: string
+    @Arg('password') password: string,
+    @Arg('terms') terms: boolean
   ) {
+    try {
+      await registerSchema.validate({ username, password, terms });
+    } catch (error) {
+      throw new UserInputError(error);
+    }
     const hashedPassword = await hash(password, 12);
     try {
       const user = User.create({
@@ -66,6 +73,11 @@ export class UserResolver {
     @Arg('password') password: string,
     @Ctx() { res }: Context
   ): Promise<LoginResponse> {
+    try {
+      loginSchema.validate({ username, password });
+    } catch (error) {
+      throw new UserInputError(error);
+    }
     const user = await User.findOne({ where: { username } });
     if (!user) {
       throw new Error('Could not find user');

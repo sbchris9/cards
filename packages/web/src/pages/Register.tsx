@@ -65,11 +65,12 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
 
   if (loggedIn) return <Redirect to="/" />;
 
-  const onSubmit = handleSubmit(async ({ username, password }) => {
+  const onSubmit = handleSubmit(async ({ username, password, terms }) => {
     const success = await register({
       variables: {
         username,
-        password
+        password,
+        terms
       }
     });
 

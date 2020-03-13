@@ -22,3 +22,8 @@ export const loginSchema = yup.object().shape({
   username,
   password
 });
+
+export const cardSchema = yup.object().shape({
+  title: yup.string().max(255),
+  content: yup.string().max(255)
+});

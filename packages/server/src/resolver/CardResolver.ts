@@ -21,6 +21,7 @@ import {
 } from '../utils/orderUpdatedList';
 import { Card } from '../entity/Card';
 import { Row } from '../entity/Row';
+import { cardSchema } from '@ww/common';
 
 @InputType()
 class CardInput implements Partial<Card> {
@@ -47,9 +48,15 @@ export class CardResolver {
   @UseMiddleware(auth)
   async createCard(
     @Arg('rowId', _ => ID) rowId: string,
-    @Arg('cardData') { position, title, content }: CardInput,
+    @Arg('cardData') cardData: CardInput,
     @Ctx() { user }: Context
   ) {
+    try {
+      await cardSchema.validate(cardData);
+    } catch (error) {
+      throw new UserInputError(error);
+    }
+    let { position, title, content } = cardData;
     const row = await Row.createQueryBuilder('row')
       .leftJoin('row.board', 'board')
       .leftJoin('board.user', 'user')
@@ -96,6 +103,11 @@ export class CardResolver {
     @Arg('cardData') updates: CardInput,
     @Ctx() { user }: Context
   ) {
+    try {
+      await cardSchema.validate(updates);
+    } catch (error) {
+      throw new UserInputError(error);
+    }
     const card = await Card.createQueryBuilder('card')
       .leftJoin('card.row', 'row')
       .leftJoin('row.board', 'board')
