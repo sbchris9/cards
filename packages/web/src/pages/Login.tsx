@@ -23,6 +23,7 @@ import { formatValidationError, validateToken } from '../utils/other';
 import { useStoreActions, useStoreState } from '../hooks';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { FormControl } from '@material-ui/core';
+import { useApolloClient } from '@apollo/react-hooks';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -55,6 +56,7 @@ type FormData = {
 };
 export const Login: React.FC<RouteComponentProps> = ({ history }) => {
   const classes = useStyles();
+  const client = useApolloClient();
   const [login, { error }] = useLoginMutation();
   const { register, handleSubmit, errors } = useForm<FormData>({
     validationSchema: loginSchema
@@ -77,8 +79,9 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
 
     if (response.data) {
       setAccessToken(response.data.login.accessToken);
-
-      history.push('/');
+      client.resetStore().then(() => {
+        history.push('/');
+      });
     }
   });
 
