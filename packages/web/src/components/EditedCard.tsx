@@ -20,7 +20,12 @@ const useStyles = makeStyles((theme: Theme) =>
       flexShrink: 0,
       position: 'absolute',
       top: props.y,
-      left: props.x
+      left: props.x,
+      [theme.breakpoints.down('xs')]: {
+        width: '100%',
+        top: 0,
+        left: 0
+      }
     }),
     titleInput: {
       background: theme.palette.primary.main,
