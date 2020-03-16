@@ -40,7 +40,7 @@ services:
       context: .
       dockerfile: web.Dockerfile
     volumes:
-      - frontend:/app/packages/web/build
+      - frontend:/app/packages/web/dist
     environment:
       REACT_APP_API_URL: https://webapp4051-api.sandorb.dev
       PUBLIC_URL: https://webapp4051.sandorb.dev
