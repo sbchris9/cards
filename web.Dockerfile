@@ -19,4 +19,4 @@ ADD . .
 
 RUN cd ./packages/common && npm run build:prod
 
-CMD cd ./packages/web && npm run build && rm -rf /app/packages/web/dist/** && mv /app/packages/web/build /app/packages/web/dist
+CMD cd ./packages/web && npm run build && rm -rf /app/packages/web/dist/** && mv /app/packages/web/build/** /app/packages/web/dist/
