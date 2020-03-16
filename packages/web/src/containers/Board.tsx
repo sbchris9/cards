@@ -50,7 +50,7 @@ export const Board: React.FC<Props> = ({ id, rows }) => {
     }))
     .filter(row => row.cards.length);
 
-  const displayRows = isReordering ? rows : filteredRows;
+  const displayRows = !isReordering && search ? filteredRows : rows;
 
   return (
     <>
