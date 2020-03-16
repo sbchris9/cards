@@ -8,7 +8,7 @@ import { NEW_CARD } from '../config/constants';
 import { useStoreState, useStoreActions } from '../hooks';
 import { ICard } from '@ww/common';
 
-interface sProps extends BaseProps {} // TODO CLEAN
+interface CardStyleProps extends CardBaseProps {}
 
 const useStyles = makeStyles((theme: Theme) => ({
   holder: {
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       display: 'inline-block'
     }
   },
-  body: ({ textSelectable }: sProps) => ({
+  body: ({ textSelectable }: CardStyleProps) => ({
     width: theme.card.width,
     height: theme.card.height,
     textAlign: 'center',
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     verticalAlign: 'top',
     userSelect: textSelectable ? 'auto' : 'none'
   }),
-  titleHolder: (props: sProps) => ({
+  titleHolder: (props: CardStyleProps) => ({
     padding: '0 10px',
     background: darken(
       theme.palette.primary.main,
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   titleText: {
     margin: 'auto'
   },
-  contentHolder: (props: sProps) => ({
+  contentHolder: (props: CardStyleProps) => ({
     height: theme.card.contentHeight,
     background: darken(
       theme.palette.background.paper,
@@ -83,14 +83,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface BaseProps {
+interface CardBaseProps {
   title?: string;
   content?: string | JSX.Element;
   darkened?: boolean;
   textSelectable?: boolean;
 }
 
-export const CardBase: React.FC<BaseProps> = props => {
+export const CardBase: React.FC<CardBaseProps> = props => {
   const { darkened = true } = props;
   const classes = useStyles({ ...props, darkened });
   const { title, content } = props;
@@ -111,11 +111,11 @@ export const CardBase: React.FC<BaseProps> = props => {
 
 export interface Card extends ICard {}
 
-interface Props extends BaseProps {
+interface CardProps extends CardBaseProps {
   id: string;
   index: number;
 }
-export const Card: React.FC<Props> = React.memo(props => {
+export const Card: React.FC<CardProps> = React.memo(props => {
   const { id, index } = props;
   const classes = useStyles();
   const { mode: boardMode } = useStoreState(state => state.board);
