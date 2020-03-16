@@ -61,6 +61,7 @@ export class UserResolver {
       console.log(err);
       return false;
     }
+    console.log('New user: ', username);
     return true;
   }
 
