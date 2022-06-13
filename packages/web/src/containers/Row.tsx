@@ -6,6 +6,7 @@ import { Card } from './Card';
 import { getDraggableAnimationStyle } from '../utils/animation';
 import { CARD } from '../config/constants';
 import { useStoreState } from '../hooks';
+import { TextWithLinks } from './Links';
 
 interface sProps {
   empty?: boolean;
@@ -91,7 +92,7 @@ export const Row: React.FC<Props> = React.memo(props => {
                     id={card.id}
                     key={card.id}
                     title={card.title}
-                    content={card.content}
+                    content={<TextWithLinks cont={card.content || ''} />}
                     index={i}
                     darkened={!((i + index) % 2)}
                   />
