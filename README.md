@@ -1,4 +1,4 @@
-# cards
+# CardsApp
 
 A drag and drop webapp, where the user can take notes on cards, and sort them into tables.
 
