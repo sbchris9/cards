@@ -4,7 +4,7 @@ A drag and drop webapp, where the user can take notes on cards, and sort them in
 
 ## Features 
 
-* Typescript monorepo with shared code between FE - BE
+* Fullstack Typescript monorepo with shared code between FE - BE
 * GraphQL API
 * JWT authentication (access token, refresh token)
 
