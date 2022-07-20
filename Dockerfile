@@ -23,7 +23,4 @@ RUN cd ./packages/common && npm run build:prod
 
 EXPOSE 4000
 
-# RUN cp ormconfig.js ./packages/server/ormconfig.js
-# RUN cp ormconfig.js ./packages/server/dist/ormconfig.js
-
 CMD cd ./packages/server && ts-node ./src/index.ts

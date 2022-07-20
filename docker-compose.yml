@@ -1,4 +1,4 @@
-version: '3.1'
+version: "3.1"
 
 services:
   db:
@@ -6,8 +6,8 @@ services:
     ports:
       - 5432
     environment:
-      POSTGRES_USER: '${POSTGRES_USER}'
-      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
       POSTGRES_DB: prod
     volumes:
       - data:/var/lib/postgresql/data
@@ -22,13 +22,13 @@ services:
       - db:db
     environment:
       NODE_ENV: production
-      POSTGRES_USER: '${POSTGRES_USER}'
-      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
-      VIRTUAL_HOST: webapp4051-api.sandorb.dev
-      LETSENCRYPT_HOST: webapp4051-api.sandorb.dev
-      FRONTEND_URI: '${FRONTEND_URI}'
-      ACCESS_TOKEN_SECRET: '${ACCESS_TOKEN_SECRET}'
-      REFRESH_TOKEN_SECRET: '${REFRESH_TOKEN_SECRET}'
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      VIRTUAL_HOST: "${VIRTUAL_HOST}"
+      LETSENCRYPT_HOST: "${LETSENCRYPT_HOST}"
+      FRONTEND_URI: "${FRONTEND_URI}"
+      ACCESS_TOKEN_SECRET: "${ACCESS_TOKEN_SECRET}"
+      REFRESH_TOKEN_SECRET: "${REFRESH_TOKEN_SECRET}"
       VIRTUAL_PORT: 4000
     depends_on:
       - db
@@ -42,8 +42,8 @@ services:
     volumes:
       - frontend:/app/packages/web/dist
     environment:
-      REACT_APP_API_URL: https://webapp4051-api.sandorb.dev
-      PUBLIC_URL: https://webapp4051.sandorb.dev
+      REACT_APP_API_URL: "${REACT_APP_API_URL}"
+      PUBLIC_URL: "${PUBLIC_URL}"
     network_mode: bridge
 
   web_server:
@@ -52,8 +52,8 @@ services:
       - frontend:/usr/share/nginx/html:ro
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     environment:
-      VIRTUAL_HOST: webapp4051.sandorb.dev
-      LETSENCRYPT_HOST: webapp4051.sandorb.dev
+      VIRTUAL_HOST: "${VIRTUAL_HOST}"
+      LETSENCRYPT_HOST: "${LETSENCRYPT_HOST}"
     ports:
       - 80
     restart: always
